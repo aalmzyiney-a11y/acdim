@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>دورة تصميم وبناء تطبيقات الذكاء الاصطناعي</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Supabase Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'Cairo', sans-serif; background-color: #004D98; color: #f3f4f6; }
+    .glass { background: rgba(0, 77, 152, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.15); }
+    .glow-btn { box-shadow: 0 0 20px rgba(165, 0, 68, 0.5); }
+
+    /* مخصصات ألوان برشلونة */
+    .bg-barca-blue { background-color: #004D98; }
+    .bg-barca-red { background-color: #A50044; }
+    .text-barca-blue { color: #004D98; }
+    .text-barca-red { color: #A50044; }
+    .border-barca-blue { border-color: #004D98; }
+    .border-barca-red { border-color: #A50044; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+  <!-- Navigation -->
+  <header class="border-b border-barca-red glass sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3 space-x-reverse">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-barca-blue to-barca-red flex items-center justify-center font-black text-xl shadow-md border border-white/20">AI</div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight text-white drop-shadow-md">أكاديمية الذكاء الاصطناعي</h1>
+          <p class="text-xs text-yellow-300 font-medium">تصميم وبناء التطبيقات الذكية</p>
+        </div>
+      </div>
+      <button onclick="openAdminModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-barca-red bg-barca-red/30 hover:bg-barca-red/60 text-xs font-semibold text-white transition">
+        <i data-lucide="shield" class="w-3.5 h-3.5 text-yellow-300"></i>
+        <span>لوحة الإدارة</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero & Form Section -->
+  <main class="max-w-4xl mx-auto px-4 py-10 w-full">
+    <div class="text-center mb-8">
+      <span class="inline-block px-3 py-1 bg-barca-red/20 text-yellow-300 border border-barca-red/50 rounded-full text-xs font-bold mb-3 shadow-sm">🔥 التسجيل متاح لفترة محدودة</span>
+      <h2 class="text-3xl sm:text-4xl font-black text-white mb-3 drop-shadow-md">دورة بناء وتصميم تطبيقات الذكاء الاصطناعي</h2>
+      <p class="text-gray-200 max-w-xl mx-auto text-sm sm:text-base leading-relaxed drop-shadow-sm">
+        تعلّم كيفية تحويل أفكارك إلى تطبيقات وتجارب برمجية ذكية باستخدام تقنيات نماذج الذكاء الاصطناعي وربط الـ APIs مع واجهات مستخدم متميزة.
+      </p>
+    </div>
+
+    <!-- Registration Card -->
+    <div class="glass rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+      <div class="absolute -top-10 -right-10 w-36 h-36 bg-barca-red/30 rounded-full blur-3xl pointer-events-none"></div>
+
+      <h3 class="text-xl font-bold mb-4 flex items-center gap-2 text-white">
+        <i data-lucide="sparkles" class="w-5 h-5 text-yellow-300"></i>
+        <span>نموذج الانضمام للدورة</span>
+      </h3>
+
+      <form id="regForm" onsubmit="handleRegistration(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-gray-200 mb-1">الاسم الكامل <span class="text-yellow-300">*</span></label>
+          <input type="text" id="fullName" required placeholder="مثال: محمد أحمد" class="w-full bg-[#003B75]/90 border border-[#002850] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-barca-red focus:ring-1 focus:ring-barca-red transition placeholder-gray-400">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-gray-200 mb-1">رقم الواتساب <span class="text-yellow-300">*</span></label>
+            <input type="tel" id="whatsapp" required placeholder="مثال: 00970599000000" class="w-full bg-[#003B75]/90 border border-[#002850] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-barca-red focus:ring-1 focus:ring-barca-red transition placeholder-gray-400" dir="ltr">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-200 mb-1">البريد الإلكتروني (اختياري)</label>
+            <input type="email" id="email" placeholder="name@example.com" class="w-full bg-[#003B75]/90 border border-[#002850] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-barca-red focus:ring-1 focus:ring-barca-red transition placeholder-gray-400" dir="ltr">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-gray-200 mb-1">المستوى التقني والبرمجي</label>
+            <select id="level" class="w-full bg-[#003B75] border border-[#002850] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-barca-red focus:ring-1 focus:ring-barca-red">
+              <option value="مبتدئ تماماً">مبتدئ تماماً (لا خبرة سابقة)</option>
+              <option value="متوسط (معرفة بالبرمجة)">متوسط (معرفة بالبرمجة والتصميم)</option>
+              <option value="متقدم">متقدم (مطور تطبيقات/مواقع)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-200 mb-1">الوقت المفضل للجلسات</label>
+            <select id="preferredTime" class="w-full bg-[#003B75] border border-[#002850] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-barca-red focus:ring-1 focus:ring-barca-red">
+              <option value="الفترة المسائية (6:00 - 8:00 مساءً)">الفترة المسائية (6:00 - 8:00 مساءً)</option>
+              <option value="فترة الليل (8:30 - 10:30 مساءً)">فترة الليل (8:30 - 10:30 مساءً)</option>
+              <option value="نهاية الأسبوع فقط">نهاية الأسبوع فقط</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-200 mb-1">فكرة تطبيق تريد تطويرها بالذكاء الاصطناعي (اختياري)</label>
+          <textarea id="projectIdea" rows="3" placeholder="اكتب نبذة بسيطة عن مشروعك أو ما تطمح لبنائه..." class="w-full bg-[#003B75]/90 border border-[#002850] rounded-xl p-3 text-sm text-white focus:outline-none focus:border-barca-red focus:ring-1 focus:ring-barca-red transition placeholder-gray-400"></textarea>
+        </div>
+
+        <button type="submit" id="submitBtn" class="w-full py-3 bg-gradient-to-r from-barca-red to-[#C80053] hover:from-[#C80053] hover:to-barca-red text-white font-bold rounded-xl shadow-lg glow-btn flex items-center justify-center gap-2 transition border border-white/20">
+          <span>تأكيد التسجيل الآن</span>
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="fixed inset-0 bg-[#001D3D]/90 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass p-6 rounded-2xl max-w-sm w-full border border-barca-red/50 shadow-2xl text-center">
+      <div class="w-12 h-12 bg-barca-red/20 text-yellow-300 rounded-xl mx-auto flex items-center justify-center mb-3 border border-barca-red/30">
+        <i data-lucide="lock" class="w-6 h-6"></i>
+      </div>
+      <h4 class="text-lg font-bold text-white mb-1">تسجيل دخول المشرف</h4>
+      <p class="text-xs text-gray-300 mb-4">أدخل رمز المرور للوصول إلى بيانات المسجلين</p>
+      <form onsubmit="handleLogin(event)">
+        <input type="password" id="adminPass" placeholder="رمز المرور" class="w-full bg-[#003B75] border border-[#002850] rounded-xl px-4 py-2.5 text-center text-sm text-white focus:outline-none focus:border-barca-red mb-3 placeholder-gray-400" required>
+        <div id="loginError" class="text-xs text-yellow-400 hidden mb-2 font-medium bg-black/20 p-2 rounded">رمز المرور غير صحيح!</div>
+        <div class="flex gap-2">
+          <button type="submit" class="flex-1 py-2 bg-barca-red hover:bg-[#C80053] rounded-xl font-bold text-xs text-white transition border border-white/10">دخول</button>
+          <button type="button" onclick="closeAdminModal()" class="px-4 py-2 bg-[#003B75] hover:bg-[#002850] border border-[#002850] rounded-xl font-bold text-xs text-gray-200 transition">إلغاء</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Dashboard Modal -->
+  <div id="dashboardModal" class="fixed inset-0 bg-[#001D3D]/95 backdrop-blur-md z-50 hidden flex flex-col p-4 sm:p-8 overflow-y-auto">
+    <div class="max-w-6xl w-full mx-auto glass rounded-2xl p-5 flex flex-col flex-1 border border-barca-red/30 shadow-2xl shadow-barca-red/20">
+      
+      <!-- Top Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-[#003B75]">
+        <div>
+          <h3 class="text-xl font-bold text-white flex items-center gap-2">
+            <i data-lucide="layout-dashboard" class="w-5 h-5 text-yellow-300"></i>
+            <span>لوحة تحكم المسجلين بالدورة</span>
+          </h3>
+          <p class="text-xs text-gray-300">بيانات المسجلين الحية والمباشرة من قاعدة البيانات</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="fetchRegistrations()" class="px-3 py-1.5 bg-[#003B75] hover:bg-[#002850] text-xs font-semibold rounded-lg text-white flex items-center gap-1 border border-[#002850]">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+            <span>تحديث</span>
+          </button>
+          <button onclick="exportToCSV()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-xs font-semibold rounded-lg text-white flex items-center gap-1 shadow-sm">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>تصدير Excel</span>
+          </button>
+          <button onclick="closeDashboard()" class="px-3 py-1.5 bg-barca-red hover:bg-[#C80053] text-xs font-semibold rounded-lg text-white shadow-sm">إغلاق</button>
+        </div>
+      </div>
+
+      <!-- Live Count Stats -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-4">
+        <div class="bg-[#003B75]/60 p-3 rounded-xl border border-[#002850] shadow-sm">
+          <span class="text-xs text-gray-300 block">إجمالي المسجلين</span>
+          <span id="totalCount" class="text-xl font-black text-white">0</span>
+        </div>
+        <div class="bg-[#003B75]/60 p-3 rounded-xl border border-[#002850] shadow-sm">
+          <span class="text-xs text-gray-300 block">مبتدئ</span>
+          <span id="beginnerCount" class="text-xl font-black text-yellow-300">0</span>
+        </div>
+        <div class="bg-[#003B75]/60 p-3 rounded-xl border border-[#002850] shadow-sm">
+          <span class="text-xs text-gray-300 block">متوسط</span>
+          <span id="midCount" class="text-xl font-black text-sky-300">0</span>
+        </div>
+        <div class="bg-[#003B75]/60 p-3 rounded-xl border border-[#002850] shadow-sm">
+          <span class="text-xs text-gray-300 block">متقدم</span>
+          <span id="proCount" class="text-xl font-black text-emerald-400">0</span>
+        </div>
+      </div>
+
+      <!-- Table Container -->
+      <div class="overflow-x-auto flex-1 rounded-xl border border-[#002850] bg-[#001D3D]/60 shadow-inner">
+        <table class="w-full text-right text-xs text-gray-200">
+          <thead class="bg-[#003B75] text-gray-100 text-2xs uppercase border-b border-[#002850]">
+            <tr>
+              <th class="p-3 font-semibold">#</th>
+              <th class="p-3 font-semibold">الاسم</th>
+              <th class="p-3 font-semibold">واتساب</th>
+              <th class="p-3 font-semibold">البريد</th>
+              <th class="p-3 font-semibold">المستوى</th>
+              <th class="p-3 font-semibold">الوقت المفضل</th>
+              <th class="p-3 font-semibold">فكرة المشروع</th>
+              <th class="p-3 font-semibold">تاريخ التسجيل</th>
+            </tr>
+          </thead>
+          <tbody id="registrationsTable" class="divide-y divide-[#002850]">
+            <tr>
+              <td colspan="8" class="text-center py-8 text-gray-400">جاري جلب البيانات...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // ⚙️ إعدادات الربط وقاعدة البيانات:
+    // ==========================================
+    const SUPABASE_URL = "https://YOUR-PROJECT.supabase.co"; // استبدل برابط مشروعك
+    const SUPABASE_ANON_KEY = "YOUR-ANON-KEY";              // استبدل بمفتاح anon
+
+    // تهيئة عميل Supabase
+    let supabaseClient = null;
+    if (SUPABASE_URL !== "https://YOUR-PROJECT.supabase.co") {
+      supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+
+    let allData = [];
+
+    // عند تحميل الصفحة
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+    });
+
+    // إرسال البيانات إلى Supabase
+    async function handleRegistration(e) {
+      e.preventDefault();
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `جاري حفظ البيانات...`;
+
+      const newRecord = {
+        full_name: document.getElementById('fullName').value.trim(),
+        whatsapp: document.getElementById('whatsapp').value.trim(),
+        email: document.getElementById('email').value.trim() || null,
+        level: document.getElementById('level').value,
+        preferred_time: document.getElementById('preferredTime').value,
+        project_idea: document.getElementById('projectIdea').value.trim() || null
+      };
+
+      try {
+        if (supabaseClient) {
+          const { data, error } = await supabaseClient.from('registrations').insert([newRecord]);
+          if (error) throw error;
+        } else {
+          // حفظ محلي احتياطي في حال لم تضع مفاتيح Supabase بعد
+          let local = JSON.parse(localStorage.getItem('registrations_backup') || '[]');
+          newRecord.created_at = new Date().toISOString();
+          local.push(newRecord);
+          localStorage.setItem('registrations_backup', JSON.stringify(local));
+        }
+
+        alert('🎉 تم تأكيد تسجيلك بنجاح في الدورة! سنتواصل معك عبر واتساب قريباً.');
+        document.getElementById('regForm').reset();
+      } catch (err) {
+        console.error(err);
+        alert('حدث خطأ أثناء الإرسال: ' + err.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<span>تأكيد التسجيل الآن</span><i data-lucide="arrow-left" class="w-4 h-4"></i>`;
+        lucide.createIcons();
+      }
+    }
+
+    // إدارة لوحة التحكم وكلمة المرور
+    function openAdminModal() {
+      document.getElementById('loginModal').classList.remove('hidden');
+      document.getElementById('adminPass').value = '';
+      document.getElementById('loginError').classList.add('hidden');
+    }
+
+    function closeAdminModal() {
+      document.getElementById('loginModal').classList.add('hidden');
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const pass = document.getElementById('adminPass').value;
+      // كلمة المرور المطلوبة
+      if (pass === '123788905') {
+        closeAdminModal();
+        document.getElementById('dashboardModal').classList.remove('hidden');
+        fetchRegistrations();
+      } else {
+        document.getElementById('loginError').classList.remove('hidden');
+      }
+    }
+
+    function closeDashboard() {
+      document.getElementById('dashboardModal').classList.add('hidden');
+    }
+
+    // جلب البيانات من السيرفر وعرضها في الجدول
+    async function fetchRegistrations() {
+      const tbody = document.getElementById('registrationsTable');
+      tbody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-gray-500">جاري تحميل البيانات...</td></tr>`;
+
+      try {
+        if (supabaseClient) {
+          const { data, error } = await supabaseClient.from('registrations').select('*').order('created_at', { ascending: false });
+          if (error) throw error;
+          allData = data || [];
+        } else {
+          allData = JSON.parse(localStorage.getItem('registrations_backup') || '[]');
+        }
+
+        renderTable(allData);
+        updateStats(allData);
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-4 text-rose-400">خطأ في جلب البيانات: ${err.message}</td></tr>`;
+      }
+    }
+
+    function renderTable(list) {
+      const tbody = document.getElementById('registrationsTable');
+      if (!list || list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-gray-500">لا يوجد أي مسجلين بعد.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map((item, index) => {
+        const cleanPhone = item.whatsapp.replace(/[^0-9]/g, '');
+        const dateStr = new Date(item.created_at).toLocaleDateString('ar-EG', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        return `
+          <tr class="hover:bg-[#003B75]/80 transition">
+            <td class="p-3 text-gray-300">${index + 1}</td>
+            <td class="p-3 font-bold text-white">${item.full_name}</td>
+            <td class="p-3">
+              <a href="https://wa.me/${cleanPhone}" target="_blank" class="text-emerald-400 hover:text-emerald-300 hover:underline inline-flex items-center gap-1 font-mono">
+                ${item.whatsapp}
+              </a>
+            </td>
+            <td class="p-3 text-gray-200 font-mono text-2xs">${item.email || '-'}</td>
+            <td class="p-3"><span class="px-2 py-0.5 rounded-full bg-barca-red/20 text-yellow-100 text-2xs border border-barca-red/40">${item.level}</span></td>
+            <td class="p-3 text-gray-200">${item.preferred_time}</td>
+            <td class="p-3 text-gray-300 max-w-xs truncate" title="${item.project_idea || ''}">${item.project_idea || '-'}</td>
+            <td class="p-3 text-gray-400 font-mono text-2xs">${dateStr}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function updateStats(list) {
+      document.getElementById('totalCount').innerText = list.length;
+      document.getElementById('beginnerCount').innerText = list.filter(i => i.level.includes('مبتدئ')).length;
+      document.getElementById('midCount').innerText = list.filter(i => i.level.includes('متوسط')).length;
+      document.getElementById('proCount').innerText = list.filter(i => i.level.includes('متقدم')).length;
+    }
+
+    // تصدير البيانات إلى ملف Excel / CSV
+    function exportToCSV() {
+      if (allData.length === 0) return alert('لا توجد بيانات لتصديرها!');
+      let csvContent = "\uFEFFالاسم,الواتساب,البريد,المستوى,الموعد المفضل,فكرة المشروع,التاريخ\n";
+      allData.forEach(r => {
+        csvContent += `"${r.full_name}","${r.whatsapp}","${r.email || ''}","${r.level}","${r.preferred_time}","${(r.project_idea || '').replace(/"/g, '""')}","${r.created_at}"\n`;
+      });
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `AI_Course_Students_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+    }
+  </script>
+</body>
+</html>
